@@ -17,12 +17,6 @@
     /* Vite env types */
     "types": ["vite/client"],
 
-    /* Paths */
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-
     /* Linting */
     "strict": true,
     "noUnusedLocals": false,

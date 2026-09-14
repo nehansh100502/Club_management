@@ -1,4 +1,4 @@
-// API client for Student Club Management System (Flask backend)
+// API client for Student Club Management System (Node.js backend)
 
 import { Club, Event, User } from './types';
 
