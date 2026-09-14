@@ -1,8 +1,8 @@
-# The Clubs - Comprehensive Club & Event Management Platform
+# The Clubs - Student Club & Event Management Platform
 
 ![The Clubs](/frontend/public/AppTitleImage.png)
 
-A modern, full-stack **Club & Event Management System** designed for universities, colleges, and organizations to streamline student club governance, event lifecycle workflows, memberships, attendance tracking, and administrative analytics.
+A full-stack **Club & Event Management System** for universities and colleges to manage student clubs, memberships, and an event approval workflow, with role-based access for admins, club heads, and students.
 
 ---
 
@@ -15,7 +15,7 @@ A modern, full-stack **Club & Event Management System** designed for universitie
 - [System Architecture](#-system-architecture)
 - [Quickstart with Docker (Recommended)](#-quickstart-with-docker-recommended)
 - [Local Development Setup](#-local-development-setup)
-  - [Backend Setup (Flask)](#1-backend-setup-flask)
+  - [Backend Setup (Node.js)](#1-backend-setup-nodejs)
   - [Frontend Setup (React + Vite)](#2-frontend-setup-react--vite)
 - [Default Demo Accounts](#-default-demo-accounts)
 - [API Overview](#-api-overview)
@@ -27,34 +27,35 @@ A modern, full-stack **Club & Event Management System** designed for universitie
 
 ## 🌟 Overview
 
-**The Clubs** bridges the communication gap between university administrators, club leads, and students. It replaces fragmented spreadsheets, manual email chains, and disconnected chats with a centralized platform for:
-- Creating and approving club events with a moderation workflow.
-- Engaging students through calendar scheduling, club discovery, and photo galleries.
-- Rewarding top clubs with a dynamic points and leaderboard system.
-- Generating downloadable PDF executive performance reports.
+**The Clubs** bridges the communication gap between university administrators, club leads, and students. It centralizes:
+- Club discovery and one-click membership joining.
+- An event moderation workflow: club heads submit events, admins approve or reject them.
+- A calendar view of approved events and role-aware dashboards for each user type.
+- Admin tools for managing clubs, users, and their roles.
 
 ---
 
 ## 🚀 Key Features
 
 ### 🏛️ Club Governance & Discovery
-- **Club Directory**: Browse clubs categorized by domain (Technology, Arts, Sports, Entrepreneurship, etc.).
-- **Join & Membership Management**: Students can join clubs with one click; club heads can monitor active member rosters.
-- **Gamified Leaderboard**: Automatic ranking of clubs based on engagement points and activities.
+- **Club Directory**: Browse all clubs with descriptions and categories.
+- **Club Details Page**: View a club's info, head, and member roster.
+- **Join Membership**: Students can join a club with one click.
+- **Manage Clubs (Admin)**: Create clubs, assign/reassign club heads, edit club details.
 
 ### 📅 Event Management & Moderation
-- **Moderation Workflow**: Events transition from `Pending` ➔ `Approved` / `Rejected` by authorized administrators.
-- **Centralized Event Calendar**: Color-coded view of upcoming campus events.
-- **Attendance & Check-in Tracking**: Monitor participation metrics for each event.
-- **Event Photo Gallery**: Upload and showcase event photos with role-based access.
+- **Moderation Workflow**: Events created by club heads start as `pending`; admins approve or reject them. Events created directly by admins are auto-approved.
+- **Role-Scoped Event Lists**: Admins see all events, club heads see their club's events, students see approved events plus events from clubs they've joined, guests see approved events only.
+- **Event Calendar**: Calendar view of events.
+- **Create / Edit Events**: Club heads and admins can create and edit events (approved events are locked from further edits by club heads).
 
-### 🔔 Smart Notification Center
-- Real-time updates on event approvals, rejections, club announcements, and reminders.
-- Granular mark-as-read and batch deletion controls.
+### 👤 Accounts & Access Control
+- **Signup / Login**: Email + password authentication with JWT sessions.
+- **Manage Users (Admin)**: List all users and change their role (`admin` / `club_head` / `student`).
+- **Personal Dashboards**: Role-aware dashboard, "My Events", and "My Clubs" (memberships) pages.
 
-### 📊 Analytics & Reporting
-- Visual analytics dashboard powered by interactive Recharts.
-- **One-Click PDF Export**: Download annual club performance reports directly using `jsPDF` and `html2canvas`.
+### 📊 Admin Analytics
+- Chart-based overview (via Recharts) on the admin dashboard summarizing clubs, events, and membership activity.
 
 ---
 
@@ -62,14 +63,12 @@ A modern, full-stack **Club & Event Management System** designed for universitie
 
 | Feature | Admin | Club Head | Student / Member | Guest |
 | :--- | :---: | :---: | :---: | :---: |
-| **Browse Clubs & Events** | ✅ | ✅ | ✅ | ✅ |
+| **Browse Clubs & Events** | ✅ | ✅ | ✅ | ✅ (approved events only) |
 | **Join Clubs** | ✅ | ✅ | ✅ | ❌ |
 | **Create / Edit Events** | ✅ | ✅ (Own Club) | ❌ | ❌ |
 | **Approve / Reject Events** | ✅ | ❌ | ❌ | ❌ |
-| **Upload Gallery Photos** | ✅ | ✅ (Own Club) | ❌ | ❌ |
 | **Manage Users & Assign Roles** | ✅ | ❌ | ❌ | ❌ |
-| **Create & Delete Clubs** | ✅ | ❌ | ❌ | ❌ |
-| **Generate Annual Reports** | ✅ | ✅ | ❌ | ❌ |
+| **Create / Edit / Delete Clubs** | ✅ | ✏️ (Own Club: description/logo only) | ❌ | ❌ |
 
 ---
 
@@ -77,18 +76,18 @@ A modern, full-stack **Club & Event Management System** designed for universitie
 
 ### Frontend
 - **Framework**: React 18 with TypeScript & Vite
-- **Styling**: Tailwind CSS & Modern Custom UI Components
-- **Components**: Radix UI Primitives & Material UI (MUI)
-- **Icons & Motion**: Lucide React & Framer Motion
+- **Styling**: Tailwind CSS
+- **Components**: Radix UI Primitives (Dialog, Alert Dialog, Select, Label, Slot)
+- **Icons**: Lucide React
 - **Routing**: React Router 7
-- **Charts & Reporting**: Recharts, jsPDF, html2canvas
+- **Charts**: Recharts
+- **Toasts**: Sonner
 
 ### Backend
-- **Framework**: Python 3.11+ / Flask
-- **Database ORM**: SQLAlchemy with Flask-SQLAlchemy & Flask-Migrate
-- **Authentication**: JWT (Flask-JWT-Extended) & Bcrypt Password Hashing
-- **WSGI Server**: Gunicorn (Production)
-- **Database**: PostgreSQL (Production) / SQLite (Local Dev Supported)
+- **Framework**: Node.js 20+ / Express
+- **Database ODM**: Mongoose
+- **Authentication**: JWT (`jsonwebtoken`) & `bcryptjs` password hashing
+- **Database**: MongoDB
 
 ### DevOps & Infrastructure
 - **Containerization**: Docker & Docker Compose
@@ -111,13 +110,13 @@ A modern, full-stack **Club & Event Management System** designed for universitie
        Static React Assets                       Proxy API (/api/*)
                        /                           \
                       v                             v
-           +---------------------+        +--------------------+
-           | React 18 SPA (Vite) |        | Flask API (Port 5000)|
-           +---------------------+        +--------------------+
+           +---------------------+        +------------------------+
+           | React 18 SPA (Vite) |        | Node.js API (Port 5000)|
+           +---------------------+        +------------------------+
                                                     |
                                                     v
                                           +--------------------+
-                                          | PostgreSQL Database|
+                                          | MongoDB Database   |
                                           +--------------------+
 ```
 
@@ -125,7 +124,7 @@ A modern, full-stack **Club & Event Management System** designed for universitie
 
 ## 🐳 Quickstart with Docker (Recommended)
 
-Run the entire platform (PostgreSQL database + Flask backend + React frontend) with a single command:
+Run the entire platform (MongoDB database + Node.js backend + React frontend) with a single command:
 
 ```bash
 # 1. Clone the repository
@@ -142,7 +141,7 @@ docker compose logs -f
 ### Access URLs:
 - **Web Application**: [http://localhost](http://localhost)
 - **Backend API**: [http://localhost:5000/api](http://localhost:5000/api)
-- **PostgreSQL Database**: `localhost:5432`
+- **MongoDB Database**: `localhost:27018` (mapped from container port `27017`)
 
 ### Stop Containers:
 ```bash
@@ -161,26 +160,23 @@ If you prefer to run services individually without Docker:
 
 ### Prerequisites
 - Node.js (v18+) & npm
-- Python (v3.10+)
-- PostgreSQL (or local SQLite)
+- MongoDB (local instance, Docker container, or Atlas connection string)
 
-### 1. Backend Setup (Flask)
+### 1. Backend Setup (Node.js)
 
 ```bash
 cd backend
 
-# Create and activate virtual environment
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
 # Install dependencies
-pip install -r requirements.txt
+npm install
 
 # Configure environment
 cp .env.example .env
+# Edit .env and set MONGODB_URI to point at your MongoDB instance
+# (e.g. run `docker run -d -p 27017:27017 mongo:7` for a local instance)
 
-# Run backend (Automatically creates tables and seeds demo data on first start)
-python run.py
+# Run backend (automatically connects and seeds demo data on first start)
+npm start
 ```
 *Backend runs on `http://localhost:5000`*
 
@@ -208,8 +204,8 @@ The database is automatically pre-seeded with sample users and clubs for testing
 | Role | Email | Purpose / Permissions |
 | :--- | :--- | :--- |
 | **Admin** | `admin@university.edu` | Full platform control, approve events, manage users & clubs |
-| **Club Head** | `head@university.edu` | Manage Tech Club, create events, upload gallery photos |
-| **Student** | `student@university.edu` | Join clubs, explore events, check notifications |
+| **Club Head** | `head@university.edu` | Manage Tech Club, create/edit events |
+| **Student** | `student@university.edu` | Join clubs, browse events, view dashboard |
 
 ---
 
@@ -218,53 +214,60 @@ The database is automatically pre-seeded with sample users and clubs for testing
 | Method | Endpoint | Description | Auth Required |
 | :--- | :--- | :--- | :---: |
 | `POST` | `/api/auth/login` | Authenticate user & get JWT | No |
-| `POST` | `/api/auth/signup` | Register new student/user | No |
+| `POST` | `/api/auth/signup` | Register new student user | No |
 | `GET` | `/api/clubs` | List all clubs | No |
+| `GET` | `/api/clubs/my` | List clubs the current user has joined | Yes |
+| `GET` | `/api/clubs/:id` | Get a single club | No |
+| `GET` | `/api/clubs/:id/members` | List a club's members | Yes |
 | `POST` | `/api/clubs` | Create new club | Admin |
-| `POST` | `/api/clubs/<id>/join` | Join a club | Yes |
-| `GET` | `/api/events` | List all events | No |
-| `POST` | `/api/events` | Create new event request | Admin / Club Head |
-| `POST` | `/api/events/<id>/approve`| Approve pending event | Admin |
-| `POST` | `/api/events/<id>/reject` | Reject pending event | Admin |
-| `GET` | `/api/gallery` | Get role-filtered gallery photos | Yes |
-| `POST` | `/api/gallery/upload` | Upload event photo | Admin / Club Head |
-| `GET` | `/api/notifications` | Get user notifications | Yes |
-| `GET` | `/api/reports/yearly` | Get yearly analytics report | Admin / Club Head |
+| `PUT` | `/api/clubs/:id` | Update a club | Admin / Club Head (own club) |
+| `DELETE` | `/api/clubs/:id` | Delete a club | Admin |
+| `POST` | `/api/clubs/:id/join` | Join a club | Yes |
+| `GET` | `/api/events` | List events (role-scoped) | No (role-aware if authenticated) |
+| `GET` | `/api/events/:id` | Get a single event | No |
+| `POST` | `/api/events` | Create new event | Admin / Club Head |
+| `PUT` | `/api/events/:id` | Update an event | Admin / Club Head (own club) |
+| `DELETE` | `/api/events/:id` | Delete an event | Admin / Club Head (own club) |
+| `POST` | `/api/events/:id/approve` | Approve a pending event | Admin |
+| `POST` | `/api/events/:id/reject` | Reject a pending event | Admin |
 | `GET` | `/api/users` | List all registered users | Admin |
+| `PUT` | `/api/users/:id/role` | Change a user's role | Admin |
 
 ---
 
 ## 📁 Project Directory Structure
 
 ```text
-The_Clubs/
-├── backend/                    # Flask REST API
-│   ├── app/
-│   │   ├── routes/             # API Endpoints (auth, clubs, events, etc.)
-│   │   ├── config.py           # Configuration settings
-│   │   ├── models.py           # SQLAlchemy database models
-│   │   ├── seed.py             # Automatic database seeding
-│   │   └── serializers.py      # Object-to-dict data formatters
-│   ├── Dockerfile              # Backend container definition
-│   ├── requirements.txt        # Python package dependencies
-│   ├── run.py                  # Local dev server entrypoint
-│   └── wsgi.py                 # Production Gunicorn entrypoint
-├── frontend/                   # React 18 SPA
+Club_management/
+├── backend/                    # Node.js / Express REST API
+│   ├── src/
+│   │   ├── routes/             # API endpoints (auth, clubs, events, users)
+│   │   ├── models/              # Mongoose schemas (User, Club, ClubMember, Event)
+│   │   ├── middleware/          # JWT auth & role-based access middleware
+│   │   ├── config.js            # Configuration settings
+│   │   ├── db.js                # MongoDB connection
+│   │   ├── seed.js              # Automatic database seeding
+│   │   ├── serializers.js       # Document-to-JSON formatters
+│   │   ├── app.js               # Express app & route registration
+│   │   └── server.js            # Server entrypoint
+│   ├── Dockerfile               # Backend container definition
+│   └── package.json             # Node dependencies
+├── frontend/                    # React 18 SPA
 │   ├── src/
 │   │   ├── app/
-│   │   │   ├── components/     # UI & Layout components (Navbars, Dialogs)
-│   │   │   ├── pages/          # Application views (Dashboard, Events, Admin)
-│   │   │   ├── lib/            # API client, types, and authentication context
-│   │   │   └── routes.tsx      # Application routing
-│   │   └── styles/             # Tailwind CSS & custom design system
-│   ├── Dockerfile              # Frontend multi-stage container
-│   ├── nginx.conf              # Nginx reverse proxy & SPA routing config
-│   ├── package.json            # Node dependencies
-│   └── vite.config.ts          # Vite build configuration
-├── docker-compose.yml          # Multi-container orchestration (DB, API, Web)
-├── .dockerignore               # Docker build exclusions
-├── .gitignore                  # Git tracked exclusions
-└── README.md                   # Project documentation
+│   │   │   ├── components/      # Layout, auth guard, and UI primitives
+│   │   │   ├── pages/           # Application views (dashboard, clubs, events, admin)
+│   │   │   ├── lib/             # API client, types, and auth context
+│   │   │   └── routes.tsx       # Application routing
+│   │   └── styles/               # Tailwind CSS & theme
+│   ├── Dockerfile                # Frontend multi-stage container
+│   ├── nginx.conf                # Nginx reverse proxy & SPA routing config
+│   ├── package.json              # Node dependencies
+│   └── vite.config.ts            # Vite build configuration
+├── docker-compose.yml           # Multi-container orchestration (DB, API, Web)
+├── .dockerignore                 # Docker build exclusions
+├── .gitignore                    # Git tracked exclusions
+└── README.md                     # Project documentation
 ```
 
 ---
@@ -274,11 +277,13 @@ The_Clubs/
 ### Backend (`backend/.env`)
 | Variable | Description | Default |
 | :--- | :--- | :--- |
-| `FLASK_ENV` | Flask execution environment | `development` |
-| `SECRET_KEY` | Flask session secret key | `dev-secret-change-me` |
+| `NODE_ENV` | Node execution environment | `development` |
+| `PORT` | Port the API server listens on | `5000` |
+| `SECRET_KEY` | Application session secret key | `dev-secret-change-me` |
 | `JWT_SECRET_KEY` | Key for signing JWT tokens | `dev-jwt-secret-change-me` |
-| `DATABASE_URL` | PostgreSQL connection string | `postgresql://postgres:postgres@localhost:5432/the_clubs` |
+| `MONGODB_URI` | MongoDB connection string | `mongodb://localhost:27017/the_clubs` |
 | `CORS_ORIGINS` | Comma-separated allowed frontend origins | `http://localhost:5173,http://localhost:80` |
+| `DEMO_PASSWORD` | Password used for seeded demo accounts | `password` |
 
 ### Frontend (`frontend/.env`)
 | Variable | Description | Default |
@@ -289,4 +294,4 @@ The_Clubs/
 
 ## 📄 License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the MIT License.

@@ -1,30 +1,14 @@
-FROM python:3.11-slim
-
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+FROM node:20-alpine
 
 WORKDIR /app
 
-# Install system dependencies needed for PostgreSQL and runtime tools
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    libpq-dev \
-    gcc \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+# Install dependencies first for better layer caching
+COPY package.json package-lock.json* ./
+RUN npm install --omit=dev
 
 # Copy application source code
-COPY app/ ./app/
-COPY run.py wsgi.py ./
-
-# Create instance directory for uploads and local data
-RUN mkdir -p /app/instance/uploads
+COPY src/ ./src/
 
 EXPOSE 5000
 
-# Run with Gunicorn WSGI server for production
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "--timeout", "120", "wsgi:app"]
+CMD ["node", "src/server.js"]
