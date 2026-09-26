@@ -128,7 +128,7 @@ Run the entire platform (MongoDB database + Node.js backend + React frontend) wi
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/Pradeep-7142/Club_management.git
+git clone https://github.com/nehansh100502/Club_management.git
 cd Club_management
 
 # 2. Build and start all services in the background
